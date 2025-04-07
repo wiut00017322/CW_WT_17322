@@ -1,0 +1,115 @@
+doctype html
+html
+  head
+    title Language Learning App
+    link(rel="stylesheet", href="/style.css")
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  body
+    h1 Language Learning App
+    p This web application was created to fulfill the requirements of a WT course and is not a real service.
+
+    // List of Flashcards
+    h2 Flashcards
+    ul(id="flashcard-list")
+
+    // From to create and update 
+    <h3> Create/update Flashcard </h3>
+    form(id="create-update-form")
+      label(for="word") Word:
+      input(type="text" id="word" name="word" required pattern="[^0-9]+" title="Цифры не допускаются")
+      label(for="translation") Translation:
+      input(type="text" id="translation" name="translation" required pattern="[^0-9]+" title="Цифры не допускаются")
+      label(for="topic") Topic:
+      input(type="text" id="topic" name="topic" required pattern="[^0-9]+" title="Цифры не допускаются")
+      button(type="submit") Create
+
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js") // Для AJAX
+    script.
+
+      // Function to load flashcards
+      function fetchFlashcards() {
+        axios.get('/api/flashcards')
+          .then(response => {
+            const flashcards = response.data;
+            const flashcardList = document.getElementById('flashcard-list');
+            flashcardList.innerHTML = ''; // Empty list 
+            flashcards.forEach(flashcard => {
+              const li = document.createElement('li');
+              li.innerHTML = `
+                <strong>${flashcard.word}</strong> - ${flashcard.translation} <em>(${flashcard.topic})</em> 
+                <button onclick="loadFlashcardForUpdate('${flashcard._id}')">Update</button>
+                <button onclick="deleteFlashcard('${flashcard._id}')">Delete</button>`;
+              flashcardList.appendChild(li);
+            });
+          })
+          .catch(err => console.error(err));
+      }
+
+      // Function to CREATE f-card
+      document.getElementById('create-update-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const word = document.getElementById('word').value;
+        const translation = document.getElementById('translation').value;
+        const topic = document.getElementById('topic').value;
+
+
+        const flashcardId = document.getElementById('create-update-form').dataset.id;
+
+        if (flashcardId) {
+          // Update f-card
+          axios.put(`/api/flashcards/${flashcardId}`, { word, translation, topic })
+            .then(response => {
+              fetchFlashcards(); 
+              resetForm(); 
+            })
+            .catch(err => console.error(err));
+        } else {
+          // Create new f-card
+          axios.post('/api/flashcards', { word, translation, topic })
+            .then(response => {
+              fetchFlashcards(); 
+              resetForm(); 
+            })
+            .catch(err => console.error(err));
+        }
+      });
+
+      // Function to DELETE
+      function deleteFlashcard(id) {
+        axios.delete(`/api/flashcards/${id}`)
+          .then(() => fetchFlashcards()) 
+          .catch(err => console.error(err));
+      }
+
+      // Function to download flash card data for update
+      function loadFlashcardForUpdate(id) {
+        axios.get(`/api/flashcards/${id}`)
+          .then(response => {
+            const flashcard = response.data;
+            document.getElementById('word').value = flashcard.word;
+            document.getElementById('translation').value = flashcard.translation;
+            document.getElementById('topic').value = flashcard.topic;
+
+            // Change button
+            document.querySelector('button[type="submit"]').textContent = 'Update';
+            document.getElementById('create-update-form').dataset.id = flashcard._id;
+          })
+          .catch(err => console.error(err));
+      }
+
+      //Function to reset the form
+      function resetForm() {
+        document.getElementById('create-update-form').reset();
+        document.querySelector('button[type="submit"]').textContent = 'Create';
+        delete document.getElementById('create-update-form').dataset.id; 
+      }
+
+      // Loading flash cards when the page loads
+      window.onload = fetchFlashcards;
+
+
+
+
