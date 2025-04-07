@@ -15,6 +15,7 @@ In order to run the app locally it is required to:
 Then application should start running in localhost:3000 and MongoDB Atlas should be connected 
 
 Here are links GitHub and Glitch: 
+https://github.com/wiut00017322/CW_WT_17322.git 
 
 Code's Structure:
 1. models/flashcard.js - it is a folder where mongoose-model is stored, which describes the structure of flashcards in the MongoDB database.
@@ -29,4 +30,6 @@ Code's Structure:
 9. package-lock.json
 10. package.json
 11. README.md
+
+The structure is clear and understandable and also quite consistent with the required structure
          
