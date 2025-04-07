@@ -16,6 +16,7 @@ Then application should start running in localhost:3000 and MongoDB Atlas should
 
 Here are links GitHub and Glitch: 
 https://github.com/wiut00017322/CW_WT_17322.git 
+https://pretty-bright-coast.glitch.me 
 
 Code's Structure:
 1. models/flashcard.js - it is a folder where mongoose-model is stored, which describes the structure of flashcards in the MongoDB database.
