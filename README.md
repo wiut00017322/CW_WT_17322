@@ -20,7 +20,7 @@ https://pretty-bright-coast.glitch.me
 
 Code's Structure:
 1. models/flashcard.js - it is a folder where mongoose-model is stored, which describes the structure of flashcards in the MongoDB database.
-2. node_modules
+2. node_modules (currently deleted )
 3. public/style.css - here is file essential for building user-interface
 4. routes/flashcards.js
          /index.js - routes folder contains all the logic for processing HTTP requests
